@@ -1,5 +1,9 @@
 # Reproducible Scripts for Gas-rich UDGs in Hyperconical Modified Gravity
 
+This repository is part of the broader HMG reproducibility hub:
+
+- Parent repository: [robertmonjo/hmg](https://github.com/robertmonjo/hmg)
+
 This repository contains the reproducible scripts used to generate the main numerical comparisons presented in the manuscript:
 
 > Gas-rich ultra-diffuse galaxies: alleviating the MOND tension with HMG
