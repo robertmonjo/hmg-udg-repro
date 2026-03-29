@@ -1,0 +1,20 @@
+{
+  "title": "Reproducible scripts for gas-rich ultra-diffuse galaxies in hyperconical modified gravity",
+  "upload_type": "software",
+  "description": "Pure Python and base R scripts reproducing the HMG, Newtonian, and MOND outer-radius comparison for the gas-rich ultra-diffuse galaxy sample used in the associated manuscript.",
+  "creators": [
+    {
+      "name": "Monjo, Robert",
+      "orcid": "0000-0003-3100-2394",
+      "affiliation": "CUNEF University; Universidad de Chile"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "modified gravity",
+    "MOND",
+    "ultra-diffuse galaxies",
+    "galaxy dynamics",
+    "reproducibility"
+  ]
+}
