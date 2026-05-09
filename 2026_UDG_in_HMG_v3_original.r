@@ -43,12 +43,11 @@ udg <- tribble(
   749290, 97,            39,        2.38,    0.14,        9.17,       0.15,           8.32,        0.13,            6.1,               1.7,                   2.9,                    26,          6,           6,            8.47,            27,     6,     5
 )
 
-# -- rho_vac (as you had)
-rho_vac_SI <- (function(H0_km_s_Mpc = 70, Omega_L = 0.69) {
+# -- rho_vac
+rho_vac_SI <- (function(H0_km_s_Mpc = 70) {
   MPC_TO_M <- 3.085677581e22
   H0_SI    <- (H0_km_s_Mpc*1000) / MPC_TO_M
-  rho_crit <- 3*H0_SI^2/(8*pi*G_SI)
-  Omega_L * rho_crit
+  3*H0_SI^2/(8*pi*G_SI)
 })()
 
 # -------------- Vectorized helpers --------------

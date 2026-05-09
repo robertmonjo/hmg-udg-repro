@@ -42,7 +42,7 @@ Both the Python and R scripts reproduce:
 Typical outputs are:
 
 - `chi2_hmg_asymptotic ~ 17.13`
-- `s_95_one_sided_lower ~ 49.4`
+- `s_95_one_sided_lower ~ 43.9`
 - `chi2_newton ~ 9.3`
 - `chi2_mond_mls ~ 615.66`
 - `chi2_comb_newton ~ 4.41`

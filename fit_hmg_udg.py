@@ -31,9 +31,8 @@ A0_MOND_SI = 1.2e-10
 
 MPC_TO_M = 3.085677581e22
 H0_KM_S_MPC = 70.0
-OMEGA_VAC = 0.70
 H0_SI = (H0_KM_S_MPC * 1000.0) / MPC_TO_M
-RHO_VAC_SI = OMEGA_VAC * 3.0 * H0_SI**2 / (8.0 * math.pi * G_SI)
+RHO_VAC_SI = 3.0 * H0_SI**2 / (8.0 * math.pi * G_SI)
 
 DELTA_CHI2_95_ONE_SIDED = 2.71
 

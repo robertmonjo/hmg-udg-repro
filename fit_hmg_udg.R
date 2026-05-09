@@ -26,9 +26,8 @@ t0_SI  <- t0_Gyr * Gyr_SI
 
 MPC_TO_M <- 3.085677581e22
 H0_km_s_Mpc <- 70
-Omega_vac <- 0.70
 H0_SI <- (H0_km_s_Mpc * 1000) / MPC_TO_M
-rho_vac_SI <- Omega_vac * 3 * H0_SI^2 / (8 * pi * G_SI)
+rho_vac_SI <- 3 * H0_SI^2 / (8 * pi * G_SI)
 
 udg <- data.frame(
   AGC = c("114905", "122966", "219533", "248945", "334315", "749290"),
