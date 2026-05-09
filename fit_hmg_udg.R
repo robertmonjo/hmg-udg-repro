@@ -26,10 +26,9 @@ t0_SI  <- t0_Gyr * Gyr_SI
 
 MPC_TO_M <- 3.085677581e22
 H0_km_s_Mpc <- 70
-Omega_L <- 0.69
+Omega_vac <- 0.70
 H0_SI <- (H0_km_s_Mpc * 1000) / MPC_TO_M
-rho_crit_SI <- 3 * H0_SI^2 / (8 * pi * G_SI)
-rho_vac_SI <- Omega_L * rho_crit_SI
+rho_vac_SI <- Omega_vac * 3 * H0_SI^2 / (8 * pi * G_SI)
 
 udg <- data.frame(
   AGC = c("114905", "122966", "219533", "248945", "334315", "749290"),
@@ -38,9 +37,9 @@ udg <- data.frame(
   eplus = c(4, 5, 6, 3, 5, 6),
   eminus = c(6, 6, 5, 3, 5, 6),
   Rsys = c(8.02, 10.80, 9.78, 8.55, 8.49, 8.47),
-  vN_tab = c(29, 25, 32, 24, 33, 27),
-  vN_plus = c(8, 4, 12, 6, 6, 6),
-  vN_minus = c(6, 4, 8, 5, 5, 5),
+  vN_tab = c(29, 25, 32, 24, 30, 27),
+  vN_plus = c(7, 4, 9, 6, 6, 5),
+  vN_minus = c(6, 4, 7, 5, 5, 4),
   stringsAsFactors = FALSE
 )
 
@@ -68,7 +67,7 @@ vN_vec <- function(Mbar_Msun, R_kpc) {
 }
 
 vH_vec <- function(R_kpc) {
-  (R_kpc * kpc_SI / t0_SI) / kmps
+  H0_km_s_Mpc * R_kpc / 1000
 }
 
 epsilon_from_s_vec <- function(log10Mbar, R_kpc, s) {
@@ -89,7 +88,7 @@ gamma_sys_from_eps_vec <- function(eps2_H, vN_kms, vH_kms) {
 vC_from_gamma0_vec <- function(vN_kms, R_kpc, gamma_sys_rad) {
   g0 <- pmax(gamma_sys_rad, 1e-12) / pmax(cos(gamma_sys_rad), 1e-30)
   aN <- ((vN_kms * kmps)^2) / (R_kpc * kpc_SI)
-  aC <- sqrt(pmax(0, aN^2 + abs(aN) * (2 * c_SI) / (g0 * t0_SI)))
+  aC <- sqrt(pmax(0, aN^2 + abs(aN) * 2 * c_SI * H0_SI / g0))
   sqrt(aC * (R_kpc * kpc_SI)) / kmps
 }
 
@@ -120,7 +119,7 @@ Rsys <- udg$Rsys
 vH_R <- vH_vec(Rsys)
 
 chi2_hmg <- function(s) {
-  vN <- vN_vec(Mbar, Rsys)
+  vN <- udg$vN_tab
   eps2 <- epsilon_from_s_vec(udg$log10Mbar, Rsys, s)
   gsys <- gamma_sys_from_eps_vec(eps2, vN, vH_R)
   vC <- vC_from_gamma0_vec(vN, Rsys, gsys)
@@ -130,10 +129,10 @@ chi2_hmg <- function(s) {
 }
 
 chi2_fixed <- function(model_name) {
-  vN <- vN_vec(Mbar, Rsys)
   if (model_name == "newton") {
-    v_model <- vN
+    v_model <- udg$vN_tab
   } else if (model_name == "mond") {
+    vN <- vN_vec(Mbar, Rsys)
     v_model <- vMOND_vec(vN, Rsys)
   } else {
     stop("Unknown model")
@@ -143,13 +142,13 @@ chi2_fixed <- function(model_name) {
   sum((r / se)^2)
 }
 
-opt <- optimize(chi2_hmg, interval = c(0.1, 5e2), tol = 1e-6)
+opt <- optimize(chi2_hmg, interval = c(1, 1e6), tol = 1e-6)
 s_hat <- opt$minimum
 chi2_min <- opt$objective
 target_95 <- chi2_min + 2.71
 
 find_lo <- function() {
-  a <- 0.1
+  a <- 1
   b <- s_hat
   fa <- chi2_hmg(a) - target_95
   fb <- chi2_hmg(b) - target_95
@@ -166,11 +165,11 @@ find_lo <- function() {
 
 s95_lo <- find_lo()
 
-vN_asym <- vN_vec(Mbar, Rsys)
+vN_asym <- udg$vN_tab
 eps2_asym <- rep(1 / 6, nrow(udg))
 gamma_asym <- gamma_sys_from_eps_vec(eps2_asym, vN_asym, vH_R)
 vHMG_asym <- vC_from_gamma0_vec(vN_asym, Rsys, gamma_asym)
-vMOND <- vMOND_vec(vN_asym, Rsys)
+vMOND <- vMOND_vec(vN_vec(Mbar, Rsys), Rsys)
 
 z_newton <- mapply(
   combined_sigma_z,

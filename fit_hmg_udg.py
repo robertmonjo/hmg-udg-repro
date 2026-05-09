@@ -31,10 +31,9 @@ A0_MOND_SI = 1.2e-10
 
 MPC_TO_M = 3.085677581e22
 H0_KM_S_MPC = 70.0
-OMEGA_L = 0.69
+OMEGA_VAC = 0.70
 H0_SI = (H0_KM_S_MPC * 1000.0) / MPC_TO_M
-RHO_CRIT_SI = 3.0 * H0_SI**2 / (8.0 * math.pi * G_SI)
-RHO_VAC_SI = OMEGA_L * RHO_CRIT_SI
+RHO_VAC_SI = OMEGA_VAC * 3.0 * H0_SI**2 / (8.0 * math.pi * G_SI)
 
 DELTA_CHI2_95_ONE_SIDED = 2.71
 
@@ -55,9 +54,9 @@ class Galaxy:
 DATA = [
     Galaxy("114905", 9.21, 8.02, 23.0, 4.0, 6.0, 29.0, 8.0, 6.0),
     Galaxy("122966", 9.21, 10.80, 37.0, 5.0, 6.0, 25.0, 4.0, 4.0),
-    Galaxy("219533", 9.36, 9.78, 37.0, 6.0, 5.0, 32.0, 12.0, 8.0),
+    Galaxy("219533", 9.36, 9.78, 37.0, 6.0, 5.0, 32.0, 9.0, 7.0),
     Galaxy("248945", 9.05, 8.55, 27.0, 3.0, 3.0, 24.0, 6.0, 5.0),
-    Galaxy("334315", 9.25, 8.49, 25.0, 5.0, 5.0, 33.0, 6.0, 5.0),
+    Galaxy("334315", 9.25, 8.49, 25.0, 5.0, 5.0, 30.0, 6.0, 5.0),
     Galaxy("749290", 9.17, 8.47, 26.0, 6.0, 6.0, 27.0, 6.0, 5.0),
 ]
 
@@ -67,13 +66,17 @@ def baryonic_mass_si(log10_mbar: float) -> float:
 
 
 def v_newton_kms(galaxy: Galaxy) -> float:
+    return galaxy.v_newton_tab_kms
+
+
+def v_newton_spherical_kms(galaxy: Galaxy) -> float:
     mbar_si = baryonic_mass_si(galaxy.log10_mbar)
     r_si = galaxy.r_sys_kpc * KPC_SI
     return math.sqrt(G_SI * mbar_si / r_si) / KMPS
 
 
 def v_hubble_kms(galaxy: Galaxy) -> float:
-    return (galaxy.r_sys_kpc * KPC_SI / T0_SI) / KMPS
+    return H0_KM_S_MPC * galaxy.r_sys_kpc / 1000.0
 
 
 def epsilon_s_sq(galaxy: Galaxy, s: float) -> float:
@@ -98,7 +101,7 @@ def g_hmg_si(galaxy: Galaxy, s: float) -> float:
     r_si = galaxy.r_sys_kpc * KPC_SI
     a_n_si = v_n_si**2 / r_si
     gamma = gamma_s(galaxy, s)
-    return math.sqrt(a_n_si**2 + a_n_si * (2.0 * C_SI) / T0_SI * math.cos(gamma) / gamma)
+    return math.sqrt(a_n_si**2 + a_n_si * 2.0 * C_SI * H0_SI * math.cos(gamma) / gamma)
 
 
 def v_hmg_kms(galaxy: Galaxy, s: float) -> float:
@@ -108,7 +111,7 @@ def v_hmg_kms(galaxy: Galaxy, s: float) -> float:
 
 def v_mond_kms(galaxy: Galaxy) -> float:
     r_si = galaxy.r_sys_kpc * KPC_SI
-    g_n_si = (v_newton_kms(galaxy) * KMPS) ** 2 / r_si
+    g_n_si = (v_newton_spherical_kms(galaxy) * KMPS) ** 2 / r_si
     x = g_n_si / A0_MOND_SI
     nu_hat = 1.0 / (1.0 - math.exp(-math.sqrt(x)))
     g_mond_si = nu_hat * g_n_si
@@ -194,7 +197,7 @@ def bisect_root(func, a: float, b: float, tol: float = 1e-8, max_iter: int = 200
 
 def lower_limit_s_95(s_hat: float, chi2_min: float) -> float:
     target = chi2_min + DELTA_CHI2_95_ONE_SIDED
-    a = 0.1
+    a = 1.0
     b = s_hat
     fa = chi2_hmg(a) - target
     fb = chi2_hmg(b) - target
@@ -381,7 +384,7 @@ def write_beardplot_svg(rows: list[dict]) -> str:
 
 
 def main() -> None:
-    s_hat, chi2_min = golden_section_minimum(chi2_hmg, 0.1, 5e2)
+    s_hat, chi2_min = golden_section_minimum(chi2_hmg, 1.0, 1e6)
     s95 = lower_limit_s_95(s_hat, chi2_min)
 
     chi2_newton = chi2_fixed("newton")

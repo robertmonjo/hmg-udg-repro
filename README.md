@@ -6,7 +6,11 @@ This repository is part of the broader HMG reproducibility hub:
 
 This repository contains the reproducible scripts used to generate the main numerical comparisons presented in the manuscript:
 
-> Gas-rich ultra-diffuse galaxies: alleviating the MOND tension with HMG
+> Gas-rich ultra-diffuse galaxies: alleviating the MOND tension with hyperconical modified gravity
+
+Live repository: <https://github.com/robertmonjo/hmg-udg-repro>
+
+Archived release: <https://doi.org/10.5281/zenodo.19321452>
 
 The repository includes:
 
@@ -37,12 +41,12 @@ Both the Python and R scripts reproduce:
 
 Typical outputs are:
 
-- `chi2_hmg_asymptotic ~ 18.03`
-- `s_95_one_sided_lower ~ 50.26`
-- `chi2_newton ~ 9.70`
+- `chi2_hmg_asymptotic ~ 17.13`
+- `s_95_one_sided_lower ~ 49.4`
+- `chi2_newton ~ 9.3`
 - `chi2_mond_mls ~ 615.66`
-- `chi2_comb_newton ~ 5.11`
-- `chi2_comb_hmg ~ 10.42`
+- `chi2_comb_newton ~ 4.41`
+- `chi2_comb_hmg ~ 9.92`
 
 ## How to run
 
@@ -70,4 +74,4 @@ Both scripts write their output files into the same directory as the script.
 
 ## Citation
 
-If you use this repository, please cite the associated manuscript and, if available, the archived software release DOI.
+If you use this repository, please cite the associated manuscript and the archived software release DOI: <https://doi.org/10.5281/zenodo.19321452>.

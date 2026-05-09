@@ -7,6 +7,7 @@ authors:
     given-names: Robert
     orcid: "https://orcid.org/0000-0003-3100-2394"
 repository-code: "https://github.com/robertmonjo/hmg-udg-repro"
+doi: "10.5281/zenodo.19321452"
 license: MIT
 version: "v1.0.0"
 date-released: 2026-03-29

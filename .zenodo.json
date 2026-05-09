@@ -10,6 +10,13 @@
     }
   ],
   "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/robertmonjo/hmg",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
   "keywords": [
     "modified gravity",
     "MOND",
